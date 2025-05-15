@@ -3,174 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>간단 설문조사 및 게시판 (댓글 없음 - Supabase)</title>
+    <title>간단 설문조사 및 게시판 (Supabase)</title>
     <style>
-        /* 기본 스타일 */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Noto Sans KR', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f7f7f7;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            background-color: #3498db;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 5px 5px 0 0;
-        }
-
-        nav {
-            background-color: #2980b9;
-            padding: 10px;
-        }
-
-        nav ul {
-            list-style-type: none;
-            display: flex;
-            justify-content: center;
-        }
-
-        nav ul li {
-            margin: 0 15px;
-        }
-
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: #e0e0e0;
-        }
-
-        main {
-            background-color: white;
-            padding: 20px;
-            border-radius: 0 0 5px 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            min-height: 400px;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #3498db;
-            color: white;
-            border-radius: 5px;
-            font-size: 0.9rem;
-        }
-
-        h2 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
-
-        h3 {
-            color: #3498db;
-            margin: 15px 0;
-        }
-
-        .btn {
-            display: inline-block;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            text-decoration: none;
-            transition: background-color 0.3s;
-        }
-
-        .btn:hover {
-            background-color: #2980b9;
-        }
-
-        .btn-secondary {
-            background-color: #95a5a6;
-        }
-
-        .btn-secondary:hover {
-            background-color: #7f8c8d;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        label.required::after {
-            content: " *";
-            color: #e74c3c;
-        }
-
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="password"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-
-        small {
-            color: #7f8c8d;
-            font-size: 0.85rem;
-            display: block;
-            margin-top: 5px;
-        }
-
-        .rating {
-            display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-        }
-
+        /* 기본 스타일 (위 JSON 버전과 동일) */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Noto Sans KR', Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f7f7f7; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header { background-color: #3498db; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+        nav { background-color: #2980b9; padding: 10px; }
+        nav ul { list-style-type: none; display: flex; justify-content: center; }
+        nav ul li { margin: 0 15px; }
+        nav ul li a { color: white; text-decoration: none; font-weight: bold; transition: color 0.3s; }
+        nav ul li a:hover { color: #e0e0e0; }
+        main { background-color: white; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); min-height: 400px; }
+        footer { text-align: center; margin-top: 20px; padding: 10px; background-color: #3498db; color: white; border-radius: 5px; font-size: 0.9rem; }
+        h2 { color: #2c3e50; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        h3 { color: #3498db; margin: 15px 0; }
+        .btn { display: inline-block; background-color: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-size: 1rem; text-decoration: none; transition: background-color 0.3s; }
+        .btn:hover { background-color: #2980b9; }
+        .btn-secondary { background-color: #95a5a6; }
+        .btn-secondary:hover { background-color: #7f8c8d; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        label.required::after { content: " *"; color: #e74c3c; }
+        input[type="text"], input[type="email"], input[type="password"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
+        textarea { resize: vertical; }
+        small { color: #7f8c8d; font-size: 0.85rem; display: block; margin-top: 5px; }
+        .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
         .rating input { display: none; }
         .rating label { position: relative; width: 30px; height: 30px; cursor: pointer; color: #ddd; font-size: 30px; margin-right: 5px; }
         .rating label:before { content: "★"; position: absolute; opacity: 1; font-size: 30px; }
-        .rating input:checked ~ label:before,
-        .rating label:hover:before,
-        .rating label:hover ~ label:before { color: #f39c12; }
-
+        .rating input:checked ~ label:before, .rating label:hover:before, .rating label:hover ~ label:before { color: #f39c12; }
         .welcome { text-align: center; padding: 30px 0; }
         .welcome p { margin: 20px 0; font-size: 1.1rem; }
         .welcome .buttons { margin-top: 30px; }
         .welcome .btn { margin: 0 10px; padding: 12px 20px; font-size: 1.1rem; }
-
         .board-container { margin-top: 20px; }
         .post-controls { margin-bottom: 20px; text-align: right; }
         .posts-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -181,25 +48,20 @@
         .post-title { font-weight: bold; }
         .loading, .no-posts, .error { padding: 20px; text-align: center; }
         .error { color: #e74c3c; }
-
         .post-detail { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 4px; }
         .post-info { margin: 10px 0 20px 0; color: #7f8c8d; font-size: 0.9rem; }
         .post-author, .post-date { margin-right: 15px; }
         .post-content { line-height: 1.8; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; }
         .post-nav-buttons { margin-top: 20px; }
-
         nav ul li a.tab-link.active { color: #f1c40f; border-bottom: 2px solid #f1c40f; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
     </style>
-    <!-- Supabase JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>간단 설문조사 및 게시판 (댓글 없음 - Supabase)</h1>
-        </header>
+        <header><h1>간단 설문조사 및 게시판 (Supabase)</h1></header>
         <nav>
             <ul>
                 <li><a href="#home" class="tab-link" data-tab="home">홈</a></li>
@@ -211,7 +73,7 @@
             <div id="home" class="tab-content">
                 <section class="welcome">
                     <h2>환영합니다!</h2>
-                    <p>이 시스템은 간단한 설문조사와 (댓글 기능이 없는) 게시판 기능을 제공합니다. 데이터는 Supabase에 저장됩니다.</p>
+                    <p>이 시스템은 간단한 설문조사와 게시판 기능을 제공합니다. 데이터는 Supabase에 저장됩니다.</p>
                     <div class="buttons">
                         <a href="#survey" class="btn tab-link" data-tab="survey">설문조사 참여하기</a>
                         <a href="#board" class="btn tab-link" data-tab="board">게시판 보기</a>
@@ -222,27 +84,16 @@
                 <div class="survey-container">
                     <h2>간단 만족도 설문조사</h2>
                     <form id="surveyForm">
-                        <div class="form-group">
-                            <label for="name" class="required">이름</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email" class="required">이메일</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
+                        <div class="form-group"><label for="name" class="required">이름</label><input type="text" id="name" name="name" required></div>
+                        <div class="form-group"><label for="email" class="required">이메일</label><input type="email" id="email" name="email" required></div>
                         <div class="form-group">
                             <label class="required">전반적인 서비스 만족도</label>
                             <div class="rating">
-                                <input type="radio" id="star5" name="satisfaction" value="5" required>
-                                <label for="star5" title="매우 만족"></label>
-                                <input type="radio" id="star4" name="satisfaction" value="4">
-                                <label for="star4" title="만족"></label>
-                                <input type="radio" id="star3" name="satisfaction" value="3">
-                                <label for="star3" title="보통"></label>
-                                <input type="radio" id="star2" name="satisfaction" value="2">
-                                <label for="star2" title="불만족"></label>
-                                <input type="radio" id="star1" name="satisfaction" value="1">
-                                <label for="star1" title="매우 불만족"></label>
+                                <input type="radio" id="star5" name="satisfaction" value="5" required><label for="star5" title="매우 만족"></label>
+                                <input type="radio" id="star4" name="satisfaction" value="4"><label for="star4" title="만족"></label>
+                                <input type="radio" id="star3" name="satisfaction" value="3"><label for="star3" title="보통"></label>
+                                <input type="radio" id="star2" name="satisfaction" value="2"><label for="star2" title="불만족"></label>
+                                <input type="radio" id="star1" name="satisfaction" value="1"><label for="star1" title="매우 불만족"></label>
                             </div>
                         </div>
                         <button type="submit" class="btn">제출하기</button>
@@ -252,62 +103,32 @@
             <div id="board" class="tab-content">
                 <div class="board-container">
                     <h2>게시판</h2>
-                    <div class="post-controls">
-                        <button id="writePostBtn" class="btn">새 글 작성</button>
-                    </div>
-                    <div id="postList" class="post-list">
-                        <div class="loading">게시글을 불러오는 중...</div>
-                    </div>
+                    <div class="post-controls"><button id="writePostBtn" class="btn">새 글 작성</button></div>
+                    <div id="postList" class="post-list"><div class="loading">게시글을 불러오는 중...</div></div>
                     <div id="postFormContainer" class="post-form-container" style="display: none;">
                         <h3>새 글 작성</h3>
                         <form id="postForm">
-                            <div class="form-group">
-                                <label for="postTitle" class="required">제목</label>
-                                <input type="text" id="postTitle" name="title" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="postAuthor" class="required">작성자</label>
-                                <input type="text" id="postAuthor" name="author" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="postPassword" class="required">비밀번호</label>
-                                <input type="password" id="postPassword" name="password" required>
-                                <small>게시글 수정/삭제 시 필요합니다. (데모용)</small>
-                            </div>
-                            <div class="form-group">
-                                <label for="postContent" class="required">내용</label>
-                                <textarea id="postContent" name="content" rows="6" required></textarea>
-                            </div>
-                            <div class="form-buttons">
-                                <button type="submit" class="btn">작성 완료</button>
-                                <button type="button" id="cancelPostBtn" class="btn btn-secondary">취소</button>
-                            </div>
+                            <div class="form-group"><label for="postTitle" class="required">제목</label><input type="text" id="postTitle" name="title" required></div>
+                            <div class="form-group"><label for="postAuthor" class="required">작성자</label><input type="text" id="postAuthor" name="author" required></div>
+                            <div class="form-group"><label for="postPassword" class="required">비밀번호</label><input type="password" id="postPassword" name="password" required><small>게시글 수정/삭제 시 필요합니다.</small></div>
+                            <div class="form-group"><label for="postContent" class="required">내용</label><textarea id="postContent" name="content" rows="6" required></textarea></div>
+                            <div class="form-buttons"><button type="submit" class="btn">작성 완료</button><button type="button" id="cancelPostBtn" class="btn btn-secondary">취소</button></div>
                         </form>
                     </div>
                     <div id="postViewContainer" class="post-view-container" style="display: none;">
-                        <div id="postDetail" class="post-detail">
-                            {/* 게시글 상세 내용이 여기에 로드됩니다 */}
-                        </div>
-                        {/* 댓글 섹션이 완전히 제거되었습니다. */}
-                        <div class="post-nav-buttons">
-                            <button id="backToListBtn" class="btn btn-secondary">목록으로</button>
-                        </div>
+                        <div id="postDetail" class="post-detail"></div>
+                        <div class="post-nav-buttons"><button id="backToListBtn" class="btn btn-secondary">목록으로</button></div>
                     </div>
                 </div>
             </div>
         </main>
-        <footer>
-            <p>© 2025 간단 설문조사 및 게시판 (댓글 없음 - Supabase). All rights reserved.</p>
-        </footer>
+        <footer><p>© 2025 간단 설문조사 및 게시판 (Supabase). All rights reserved.</p></footer>
     </div>
 
     <script>
-        // Supabase 클라이언트 초기화
-        // !!! 아래 YOUR_SUPABASE_URL과 YOUR_SUPABASE_ANON_KEY를 실제 값으로 변경하세요 !!!
-        const SUPABASE_URL = 'https://cnluorqsducekqdzoper.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNubHVvcnFzZHVjZWtxZHpvcGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0NDUxMTgsImV4cCI6MjA2MjAyMTExOH0.N185gbMYtEyD2WhQeidreCw5YSQaQwo_49mFEUa6YhQ';
-
-        const { createClient } = window.supabase; // CDN으로 로드된 전역 supabase 객체 사용
+        const SUPABASE_URL = 'https://cnluorqsducekqdzoper.supabase.co'; // 실제 URL로 변경
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNubHVvcnFzZHVjZWtxZHpvcGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0NDUxMTgsImV4cCI6MjA2MjAyMTExOH0.N185gbMYtEyD2WhQeidreCw5YSQaQwo_49mFEUa6YhQ'; // 실제 키로 변경
+        const { createClient } = window.supabase;
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -317,20 +138,16 @@
             const postFormContainer = document.getElementById('postFormContainer');
             const postViewContainer = document.getElementById('postViewContainer');
             const postForm = document.getElementById('postForm');
-            // const commentForm = document.getElementById('commentForm'); // 댓글 폼 제거
             const writePostBtn = document.getElementById('writePostBtn');
             const cancelPostBtn = document.getElementById('cancelPostBtn');
             const backToListBtn = document.getElementById('backToListBtn');
             const surveyForm = document.getElementById('surveyForm');
-            // let currentPostId = null; // 댓글 기능 없으므로 전역 변수 불필요
 
-            // 탭 활성화 로직 (기존과 동일)
             tabLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
-                    const tabId = this.dataset.tab;
-                    activateTab(tabId);
-                    window.location.hash = tabId;
+                    activateTab(this.dataset.tab);
+                    window.location.hash = this.dataset.tab;
                 });
             });
 
@@ -347,63 +164,41 @@
             }
 
             function handleHashChange() {
-                const hash = window.location.hash.substring(1) || 'home';
-                activateTab(hash);
+                activateTab(window.location.hash.substring(1) || 'home');
             }
             window.addEventListener('hashchange', handleHashChange);
-            handleHashChange(); // 초기 로드 시 탭 활성화
+            handleHashChange();
 
-            // 이벤트 리스너 설정 (댓글 관련 제거)
             if (writePostBtn) writePostBtn.addEventListener('click', showPostForm);
             if (cancelPostBtn) cancelPostBtn.addEventListener('click', hidePostForm);
             if (backToListBtn) backToListBtn.addEventListener('click', showPostList);
             if (postForm) postForm.addEventListener('submit', handlePostSubmit);
-            // if (commentForm) commentForm.addEventListener('submit', handleCommentSubmit); // 제거
             if (surveyForm) surveyForm.addEventListener('submit', handleSurveySubmit);
 
-            // --- 게시판 기능 함수 (댓글 기능 제거) ---
             async function loadPosts() {
                 if (!postList) return;
+                postList.innerHTML = '<div class="loading">게시글을 불러오는 중...</div>';
+                if(postFormContainer) postFormContainer.style.display = 'none';
+                if(postViewContainer) postViewContainer.style.display = 'none';
+                postList.style.display = 'block';
                 try {
-                    postList.innerHTML = '<div class="loading">게시글을 불러오는 중...</div>';
-                    if(postFormContainer) postFormContainer.style.display = 'none';
-                    if(postViewContainer) postViewContainer.style.display = 'none';
-                    postList.style.display = 'block';
-
-                    // posts 테이블에서 데이터 가져오기 (댓글 수 관련 로직 제거)
-                    const { data: postsData, error: postsError } = await supabaseClient
+                    const { data: postsData, error } = await supabaseClient
                         .from('posts')
                         .select('*')
                         .order('created_at', { ascending: false });
-
-                    if (postsError) throw postsError;
-
-                    if (!postsData || postsData.length === 0) {
+                    if (error) throw error;
+                    if (postsData.length === 0) {
                         postList.innerHTML = '<div class="no-posts">등록된 게시글이 없습니다.</div>';
                         return;
                     }
-
-                    let postsHTML = `
-                        <table class="posts-table">
-                            <thead>
-                                <tr><th>번호</th><th>제목</th><th>작성자</th><th>작성일</th></tr>
-                            </thead>
-                            <tbody>`;
+                    let postsHTML = `<table class="posts-table"><thead><tr><th>번호</th><th>제목</th><th>작성자</th><th>작성일</th></tr></thead><tbody>`;
                     postsData.forEach((post, index) => {
                         const createdAt = new Date(post.created_at).toLocaleDateString('ko-KR');
-                        postsHTML += `
-                            <tr class="post-item" data-id="${post.id}">
-                                <td>${postsData.length - index}</td>
-                                <td class="post-title">${post.title}</td> {/* 댓글 수 표시 제거 */}
-                                <td>${post.author}</td>
-                                <td>${createdAt}</td>
-                            </tr>`;
+                        postsHTML += `<tr class="post-item" data-id="${post.id}"><td>${postsData.length - index}</td><td class="post-title">${post.title}</td><td>${post.author}</td><td>${createdAt}</td></tr>`;
                     });
                     postsHTML += `</tbody></table>`;
                     postList.innerHTML = postsHTML;
-                    document.querySelectorAll('.post-item').forEach(item => {
-                        item.addEventListener('click', () => viewPost(item.dataset.id));
-                    });
+                    document.querySelectorAll('.post-item').forEach(item => item.addEventListener('click', () => viewPost(item.dataset.id)));
                 } catch (error) {
                     postList.innerHTML = `<div class="error">오류: ${error.message}</div>`;
                     console.error('게시글 로드 오류:', error);
@@ -413,34 +208,22 @@
             async function viewPost(postId) {
                 if (!postViewContainer || !postList || !postFormContainer) return;
                 try {
-                    const { data: post, error: postError } = await supabaseClient
+                    const { data: post, error } = await supabaseClient
                         .from('posts')
                         .select('*')
                         .eq('id', postId)
                         .single();
-                    if (postError || !post) throw postError || new Error('게시글 찾기 실패');
-
+                    if (error) throw error;
+                    if (!post) {
+                        alert('게시글을 찾을 수 없습니다.');
+                        showPostList();
+                        return;
+                    }
                     const createdAt = new Date(post.created_at).toLocaleString('ko-KR');
                     const postDetailEl = document.getElementById('postDetail');
                     if (postDetailEl) {
-                        postDetailEl.innerHTML = `
-                            <h3 class="post-title">${post.title}</h3>
-                            <div class="post-info">
-                                <span class="post-author">작성자: ${post.author}</span>
-                                <span class="post-date">작성일: ${createdAt}</span>
-                            </div>
-                            <div class="post-content">${formatContent(post.content)}</div>`;
+                        postDetailEl.innerHTML = `<h3 class="post-title">${post.title}</h3><div class="post-info"><span class="post-author">작성자: ${post.author}</span><span class="post-date">작성일: ${createdAt}</span></div><div class="post-content">${formatContent(post.content)}</div>`;
                     }
-
-                    // 댓글 목록 표시 로직 완전 제거
-                    // const commentsListEl = document.getElementById('commentsList');
-                    // if (commentsListEl) commentsListEl.innerHTML = '';
-
-                    // 댓글 폼 postId 설정 로직 제거
-                    // const postIdInput = document.getElementById('postId');
-                    // if (postIdInput) postIdInput.value = '';
-
-
                     postList.style.display = 'none';
                     postFormContainer.style.display = 'none';
                     postViewContainer.style.display = 'block';
@@ -450,19 +233,19 @@
                 }
             }
 
-            function showPostForm() { /* 기존과 동일 */
+            function showPostForm() {
                 if (!postList || !postViewContainer || !postFormContainer || !postForm) return;
                 postList.style.display = 'none';
                 postViewContainer.style.display = 'none';
                 postFormContainer.style.display = 'block';
                 postForm.reset();
             }
-            function hidePostForm() { /* 기존과 동일 */
+            function hidePostForm() {
                 if (!postFormContainer || !postList) return;
                 postFormContainer.style.display = 'none';
                 showPostList();
             }
-            function showPostList() { /* 기존과 동일 */
+            function showPostList() {
                 if (!postViewContainer || !postFormContainer || !postList) return;
                 postViewContainer.style.display = 'none';
                 postFormContainer.style.display = 'none';
@@ -475,13 +258,17 @@
                 if(!postForm) return;
                 const formData = new FormData(postForm);
                 const postData = {
-                    id: Date.now().toString(), // 클라이언트에서 ID 생성
+                    id: Date.now().toString(), // 클라이언트 ID 생성 또는 DB 자동 생성
                     title: formData.get('title'),
                     author: formData.get('author'),
-                    password: formData.get('password'), // 주의: 보안상 좋지 않음
+                    password: formData.get('password'),
                     content: formData.get('content'),
-                    // created_at은 Supabase 테이블에서 default now()로 자동 설정되도록 권장
+                    // created_at은 DB에서 default now()로 처리 권장
                 };
+                 if (!postData.title || !postData.author || !postData.password || !postData.content) {
+                    alert('모든 필수 항목을 입력해주세요.');
+                    return;
+                }
                 try {
                     const { error } = await supabaseClient.from('posts').insert([postData]);
                     if (error) throw error;
@@ -493,31 +280,27 @@
                 }
             }
 
-            // async function handleCommentSubmit(event) { /* 댓글 제출 함수 전체 제거 */ }
-
-            function formatContent(text) { /* 기존과 동일 */
-                if (!text) return '';
-                return text.replace(/\n/g, '<br>');
+            function formatContent(text) {
+                return text ? text.replace(/\n/g, '<br>') : '';
             }
 
-            // --- 설문조사 기능 함수 (축약됨, Supabase 연동 - 기존과 동일) ---
             async function handleSurveySubmit(event) {
                 event.preventDefault();
                 if (!surveyForm) return;
                 const formData = new FormData(surveyForm);
                 const surveyDataToInsert = {
-                    id: Date.now().toString(),
+                    id: Date.now().toString(), // 클라이언트 ID 생성 또는 DB 자동 생성
                     name: formData.get('name'),
                     email: formData.get('email'),
                     satisfaction: parseInt(formData.get('satisfaction')),
-                    // submitted_at은 Supabase 테이블에서 default now()로 자동 설정되도록 권장
+                    // submitted_at은 DB에서 default now()로 처리 권장
                 };
                 if (!surveyDataToInsert.name || !surveyDataToInsert.email || !surveyDataToInsert.satisfaction) {
                     alert('모든 필수 항목을 입력해주세요.');
                     return;
                 }
-                if (surveyDataToInsert.satisfaction < 1 || surveyDataToInsert.satisfaction > 5) {
-                    alert('만족도는 1에서 5 사이의 값이어야 합니다.');
+                if (isNaN(surveyDataToInsert.satisfaction) || surveyDataToInsert.satisfaction < 1 || surveyDataToInsert.satisfaction > 5) {
+                    alert('만족도는 1에서 5 사이의 숫자여야 합니다.');
                     return;
                 }
                 try {
@@ -525,10 +308,9 @@
                     if (error) throw error;
                     alert('설문에 참여해주셔서 감사합니다!');
                     surveyForm.reset();
-                    const stars = document.querySelectorAll('.rating input');
-                    stars.forEach(star => star.checked = false);
+                    document.querySelectorAll('.rating input').forEach(star => star.checked = false);
                 } catch (error) {
-                    alert('설문 제출 중 오류가 발생했습니다: ' + error.message);
+                    alert('설문 제출 오류: ' + error.message);
                     console.error('설문 제출 오류:', error);
                 }
             }
