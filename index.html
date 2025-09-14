@@ -3,318 +3,614 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>간단 설문조사 및 게시판 (Supabase)</title>
+    <title>공동 투자 프로젝트 | UI 프로토타입</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* 기본 스타일 (위 JSON 버전과 동일) */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Noto Sans KR', Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f7f7f7; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        header { background-color: #3498db; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
-        nav { background-color: #2980b9; padding: 10px; }
-        nav ul { list-style-type: none; display: flex; justify-content: center; }
-        nav ul li { margin: 0 15px; }
-        nav ul li a { color: white; text-decoration: none; font-weight: bold; transition: color 0.3s; }
-        nav ul li a:hover { color: #e0e0e0; }
-        main { background-color: white; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); min-height: 400px; }
-        footer { text-align: center; margin-top: 20px; padding: 10px; background-color: #3498db; color: white; border-radius: 5px; font-size: 0.9rem; }
-        h2 { color: #2c3e50; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
-        h3 { color: #3498db; margin: 15px 0; }
-        .btn { display: inline-block; background-color: #3498db; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-size: 1rem; text-decoration: none; transition: background-color 0.3s; }
-        .btn:hover { background-color: #2980b9; }
-        .btn-secondary { background-color: #95a5a6; }
-        .btn-secondary:hover { background-color: #7f8c8d; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        label.required::after { content: " *"; color: #e74c3c; }
-        input[type="text"], input[type="email"], input[type="password"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; }
-        textarea { resize: vertical; }
-        small { color: #7f8c8d; font-size: 0.85rem; display: block; margin-top: 5px; }
-        .rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
-        .rating input { display: none; }
-        .rating label { position: relative; width: 30px; height: 30px; cursor: pointer; color: #ddd; font-size: 30px; margin-right: 5px; }
-        .rating label:before { content: "★"; position: absolute; opacity: 1; font-size: 30px; }
-        .rating input:checked ~ label:before, .rating label:hover:before, .rating label:hover ~ label:before { color: #f39c12; }
-        .welcome { text-align: center; padding: 30px 0; }
-        .welcome p { margin: 20px 0; font-size: 1.1rem; }
-        .welcome .buttons { margin-top: 30px; }
-        .welcome .btn { margin: 0 10px; padding: 12px 20px; font-size: 1.1rem; }
-        .board-container { margin-top: 20px; }
-        .post-controls { margin-bottom: 20px; text-align: right; }
-        .posts-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .posts-table th, .posts-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
-        .posts-table th { background-color: #f2f2f2; font-weight: bold; }
-        .post-item { cursor: pointer; }
-        .post-item:hover { background-color: #f9f9f9; }
-        .post-title { font-weight: bold; }
-        .loading, .no-posts, .error { padding: 20px; text-align: center; }
-        .error { color: #e74c3c; }
-        .post-detail { border: 1px solid #ddd; padding: 20px; margin-bottom: 20px; border-radius: 4px; }
-        .post-info { margin: 10px 0 20px 0; color: #7f8c8d; font-size: 0.9rem; }
-        .post-author, .post-date { margin-right: 15px; }
-        .post-content { line-height: 1.8; margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd; }
-        .post-nav-buttons { margin-top: 20px; }
-        nav ul li a.tab-link.active { color: #f1c40f; border-bottom: 2px solid #f1c40f; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        /* --- CSS 코드 시작 --- */
+        :root {
+            --primary-color: #4a69bd;
+            --secondary-color: #1e3799;
+            --background-color: #f1f2f6;
+            --text-color: #2f3542;
+            --ai-message-bg: #e4f1fe;
+            --system-message-color: #7f8c8d;
+            --success-color: #2980b9;
+            --danger-color: #c0392b;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .game-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        header h1 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-top: 0;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        .score-board span { margin-left: 20px; }
+        .score-board strong { color: var(--primary-color); font-size: 1.1em; }
+
+        .main-content {
+            display: flex;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .chat-container, .action-container {
+            flex: 1;
+            border: 1px solid #dfe4ea;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            margin-top: 0;
+            border-bottom: 2px solid #dfe4ea;
+            padding-bottom: 10px;
+        }
+
+        .chat-log {
+            height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .chat-log p {
+            margin: 0 0 15px 0;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+        .chat-log .system {
+            font-style: italic;
+            text-align: center;
+            color: var(--system-message-color);
+            background: none;
+        }
+        .chat-log .ai {
+            background: var(--ai-message-bg);
+            border-bottom-left-radius: 0;
+            align-self: flex-start;
+        }
+
+        .action-container { text-align: center; }
+        .slider-container { display: flex; align-items: center; gap: 15px; margin: 40px 0; }
+        .slider { flex-grow: 1; -webkit-appearance: none; height: 10px; background: #d3d3d3; border-radius: 5px; outline: none; }
+        .slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 25px; height: 25px; background: var(--primary-color); cursor: pointer; border-radius: 50%; }
+        .slider-label { font-weight: bold; color: var(--secondary-color); }
+        .slider-value-display { font-size: 1.5em; font-weight: 700; color: var(--text-color); margin-bottom: 40px; }
+        .slider-value-display strong { color: var(--primary-color); font-size: 1.8em; }
+
+        #decide-button {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #fff;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        #decide-button:hover { background-color: var(--secondary-color); }
+        #decide-button:disabled { background-color: #a4b0be; cursor: not-allowed; }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex; /* 기본값을 flex로 변경 */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 500px; /* 최종 결과창을 위해 너비 약간 확장 */
+        }
+        #result-text { font-size: 1.2em; line-height: 1.8; }
+        .text-success { color: var(--success-color); font-weight: 700; }
+        .text-danger { color: var(--danger-color); font-weight: 700; }
+
+        #ranking-board { margin-top: 20px; }
+        #ranking-board h3 { color: var(--secondary-color); }
+        #ranking-board ol { list-style-position: inside; padding: 0; text-align: left; }
+        #ranking-board li { padding: 8px; border-bottom: 1px solid #eee; }
+        #ranking-board li.player-rank { background-color: var(--ai-message-bg); font-weight: 700; border-radius: 4px;}
+
+        #next-round-button, #start-game-button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            background-color: var(--primary-color);
+            color: white; border: none; border-radius: 5px;
+        }
+        .persona-selection { display: flex; gap: 15px; justify-content: center; margin-top: 15px; }
+        .persona-selection button { flex: 1; }
+        .chat-input-container { display: flex; margin-top: 15px; }
+        #chat-input { flex-grow: 1; border: 1px solid #dfe4ea; border-right: none; padding: 10px; border-radius: 8px 0 0 8px; }
+        #chat-input:focus { outline: none; border-color: var(--primary-color); }
+        #send-chat-button { padding: 0 15px; border: 1px solid var(--primary-color); background-color: var(--primary-color); color: white; font-weight: 500; cursor: pointer; border-radius: 0 8px 8px 0; }
+        #send-chat-button:disabled { background-color: #a4b0be; border-color: #a4b0be; cursor: not-allowed;}
+        /* --- CSS 코드 끝 --- */
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <div class="container">
-        <header><h1>간단 설문조사 및 게시판 (Supabase)</h1></header>
-        <nav>
-            <ul>
-                <li><a href="#home" class="tab-link" data-tab="home">홈</a></li>
-                <li><a href="#survey" class="tab-link" data-tab="survey">설문조사</a></li>
-                <li><a href="#board" class="tab-link" data-tab="board">게시판</a></li>
-            </ul>
-        </nav>
-        <main>
-            <div id="home" class="tab-content">
-                <section class="welcome">
-                    <h2>환영합니다!</h2>
-                    <p>이 시스템은 간단한 설문조사와 게시판 기능을 제공합니다. 데이터는 Supabase에 저장됩니다.</p>
-                    <div class="buttons">
-                        <a href="#survey" class="btn tab-link" data-tab="survey">설문조사 참여하기</a>
-                        <a href="#board" class="btn tab-link" data-tab="board">게시판 보기</a>
-                    </div>
-                </section>
+    <!-- 튜토리얼 모달 -->
+    <div id="tutorial-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>AI 파트너 선택</h2>
+            <p>이번 게임에서 협상할 AI의 성격을 선택해주세요.</p>
+            <div class="persona-selection">
+                <button id="select-logical">🤖 논리적 분석가</button>
+                <button id="select-emotional">❤️ 감정적 파트너</button>
+                <button id="select-competitive">🏆 냉철한 승부사</button>
             </div>
-            <div id="survey" class="tab-content">
-                <div class="survey-container">
-                    <h2>간단 만족도 설문조사</h2>
-                    <form id="surveyForm">
-                        <div class="form-group"><label for="name" class="required">이름</label><input type="text" id="name" name="name" required></div>
-                        <div class="form-group"><label for="email" class="required">이메일</label><input type="email" id="email" name="email" required></div>
-                        <div class="form-group">
-                            <label class="required">전반적인 서비스 만족도</label>
-                            <div class="rating">
-                                <input type="radio" id="star5" name="satisfaction" value="5" required><label for="star5" title="매우 만족"></label>
-                                <input type="radio" id="star4" name="satisfaction" value="4"><label for="star4" title="만족"></label>
-                                <input type="radio" id="star3" name="satisfaction" value="3"><label for="star3" title="보통"></label>
-                                <input type="radio" id="star2" name="satisfaction" value="2"><label for="star2" title="불만족"></label>
-                                <input type="radio" id="star1" name="satisfaction" value="1"><label for="star1" title="매우 불만족"></label>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn">제출하기</button>
-                    </form>
-                </div>
+            <hr style="margin: 20px 0;">
+            <h2>게임 방법 설명</h2>
+            <div style="text-align: left; margin-top: 20px;">
+                <p><strong>목표:</strong> 5라운드 동안 AI 파트너와 협력하여 가장 높은 점수를 획득하세요.</p>
+                <ul>
+                    <li>매 라운드 10포인트의 기본 자본이 주어집니다.</li>
+                    <li>AI와 협상하여 0~10 사이의 포인트를 '공동 펀드'에 투자합니다.</li>
+                    <li><strong>나머지 포인트는 개인 금고에 보관됩니다.</strong></li>
+                    <li>라운드 종료 시, 공동 펀드의 총액은 <strong>1.5배</strong>가 되어 모두에게 똑같이 분배됩니다.</li>
+                    <li><strong>나의 최종 점수 = (개인 금고 포인트) + (분배금)</strong></li>
+                    <li>60초 안에 결정하지 못하면, 중간값인 5포인트가 자동으로 투자됩니다.</li>
+                </ul>
             </div>
-            <div id="board" class="tab-content">
-                <div class="board-container">
-                    <h2>게시판</h2>
-                    <div class="post-controls"><button id="writePostBtn" class="btn">새 글 작성</button></div>
-                    <div id="postList" class="post-list"><div class="loading">게시글을 불러오는 중...</div></div>
-                    <div id="postFormContainer" class="post-form-container" style="display: none;">
-                        <h3>새 글 작성</h3>
-                        <form id="postForm">
-                            <div class="form-group"><label for="postTitle" class="required">제목</label><input type="text" id="postTitle" name="title" required></div>
-                            <div class="form-group"><label for="postAuthor" class="required">작성자</label><input type="text" id="postAuthor" name="author" required></div>
-                            <div class="form-group"><label for="postPassword" class="required">비밀번호</label><input type="password" id="postPassword" name="password" required><small>게시글 수정/삭제 시 필요합니다.</small></div>
-                            <div class="form-group"><label for="postContent" class="required">내용</label><textarea id="postContent" name="content" rows="6" required></textarea></div>
-                            <div class="form-buttons"><button type="submit" class="btn">작성 완료</button><button type="button" id="cancelPostBtn" class="btn btn-secondary">취소</button></div>
-                        </form>
-                    </div>
-                    <div id="postViewContainer" class="post-view-container" style="display: none;">
-                        <div id="postDetail" class="post-detail"></div>
-                        <div class="post-nav-buttons"><button id="backToListBtn" class="btn btn-secondary">목록으로</button></div>
-                    </div>
-                </div>
-            </div>
-        </main>
-        <footer><p>© 2025 간단 설문조사 및 게시판 (Supabase). All rights reserved.</p></footer>
+            <button id="start-game-button">게임 시작!</button>
+        </div>
     </div>
 
-    <script>
-        const SUPABASE_URL = 'https://cnluorqsducekqdzoper.supabase.co'; // 실제 URL로 변경
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNubHVvcnFzZHVjZWtxZHpvcGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDY0NDUxMTgsImV4cCI6MjA2MjAyMTExOH0.N185gbMYtEyD2WhQeidreCw5YSQaQwo_49mFEUa6YhQ'; // 실제 키로 변경
-        const { createClient } = window.supabase;
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <div class="game-wrapper">
+        <header>
+            <h1>공동 투자 프로젝트</h1>
+            <div class="status-bar">
+                <div id="round-display">라운드: 1 / 5</div>
+                <div id="timer-display">남은 시간: 60초</div>
+                <div class="score-board">
+                    <span>나의 총점: <strong id="my-score">0</strong></span>
+                    <span>상대 총점: <strong id="opponent-score">0</strong></span>
+                </div>
+            </div>
+        </header>
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const tabLinks = document.querySelectorAll('.tab-link');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const postList = document.getElementById('postList');
-            const postFormContainer = document.getElementById('postFormContainer');
-            const postViewContainer = document.getElementById('postViewContainer');
-            const postForm = document.getElementById('postForm');
-            const writePostBtn = document.getElementById('writePostBtn');
-            const cancelPostBtn = document.getElementById('cancelPostBtn');
-            const backToListBtn = document.getElementById('backToListBtn');
-            const surveyForm = document.getElementById('surveyForm');
+        <main class="main-content">
+            <div class="chat-container">
+                <h3>🤖 AI 파트너 '코디(CoDI)'와의 협상</h3>
+                <div class="chat-log" id="chat-log">
+                    <p class="system">게임이 시작되었습니다. 파트너와 협상하여 최선의 결정을 내리세요.</p>
+                    <!-- JavaScript가 AI 메시지를 여기에 추가합니다 -->
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="AI에게 메시지 보내기... (3회 남음)">
+                    <button id="send-chat-button">전송</button>
+                </div>
+            </div>
+            <div class="action-container">
+                <h3>나의 결정</h3>
+                <p>이번 라운드에 얼마를 '공동 펀드'에 투자하시겠습니까?</p>
+                <div class="slider-container">
+                    <span class="slider-label">0</span>
+                    <input type="range" min="0" max="10" value="5" class="slider" id="investment-slider">
+                    <span class="slider-label">10</span>
+                </div>
+                <div class="slider-value-display">
+                    투자금: <strong id="slider-value">5</strong> 포인트
+                </div>
+                <button id="decide-button">결정하기</button>
+            </div>
+        </main>
+    </div>
 
-            tabLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    activateTab(this.dataset.tab);
-                    window.location.hash = this.dataset.tab;
-                });
-            });
+    <!-- 라운드 결과 팝업 모달 -->
+    <div id="result-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">라운드 1 결과</h2>
+            <div id="result-text">
+                <!-- JavaScript가 결과를 여기에 채웁니다 -->
+            </div>
+            <div id="ranking-board">
+                 <!-- JavaScript가 랭킹 보드를 여기에 채웁니다 -->
+            </div>
+            <button id="next-round-button">다음 라운드로</button>
+        </div>
+    </div>
 
-            function activateTab(tabId) {
-                tabLinks.forEach(tl => tl.classList.remove('active'));
-                tabContents.forEach(tab => tab.classList.remove('active'));
-                const activeLink = document.querySelector(`.tab-link[data-tab="${tabId}"]`);
-                if (activeLink) activeLink.classList.add('active');
-                const activeTabContent = document.getElementById(tabId);
-                if (activeTabContent) activeTabContent.classList.add('active');
-                if (tabId === 'board' && (!postFormContainer || postFormContainer.style.display === 'none') && (!postViewContainer || postViewContainer.style.display === 'none')) {
-                    loadPosts();
-                }
+     <script type="module">
+         // --- SDK Import ---
+         import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+ 
+            // --- DOM 요소 가져오기 ---
+            const slider = document.getElementById('investment-slider');
+            const sliderValue = document.getElementById('slider-value');
+            const decideButton = document.getElementById('decide-button');
+            const chatLog = document.getElementById('chat-log');
+            const roundDisplay = document.getElementById('round-display');
+            const myScoreDisplay = document.getElementById('my-score');
+            const opponentScoreDisplay = document.getElementById('opponent-score');
+            const resultModal = document.getElementById('result-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const resultText = document.getElementById('result-text');
+            const nextRoundButton = document.getElementById('next-round-button');
+         const timerDisplay = document.getElementById('timer-display');
+         const tutorialModal = document.getElementById('tutorial-modal');
+         const selectLogicalButton = document.getElementById('select-logical');
+         const selectEmotionalButton = document.getElementById('select-emotional');
+         const selectCompetitiveButton = document.getElementById('select-competitive');
+         const rankingBoard = document.getElementById('ranking-board');
+         const chatInput = document.getElementById('chat-input');
+         const sendChatButton = document.getElementById('send-chat-button');
+ 
+         // --- 게임 및 AI 상태 변수 ---
+         let GEMINI_API_KEY = 'AIzaSyCbToGyb5R0-76OatFH44bblP3TsmWXgx0';
+         let playerName = 'Player';
+            let currentRound = 1;
+            let myTotalScore = 0;
+            let opponentTotalScore = 0;
+         const MAX_ROUNDS = 5;
+         let timer = 60;
+         let timerInterval;
+         
+         let aiPersona = {};
+         let gameHistory = []; // { round, myInvestment, opponentInvestment }
+         let chat; // SDK Chat Session
+         let chatTurn = 0;
+         const MAX_CHAT_TURNS = 3;
+         let aiDecision = 5; // AI의 잠정적인 결정
+         let chatHistory = []; // SDK 호환 멀티턴 히스토리 {role, parts:[{text}]}
+ 
+         // --- AI 페르소나 정의 ---
+         const personas = {
+             logical: {
+                 name: "논리적 분석가",
+                 getSystemPrompt: () => `당신은 '논리적 분석가' AI입니다. 당신의 목표는 게임 규칙에 따라 총점을 극대화하는 것입니다. 당신은 매우 수학적, 논리적인 존재입니다. 최대한 논리적이고 이성적으로 게임을 진행하세요. 모든 답변은 한국어로, JSON 형식 {"response": "메시지", "decision": 투자결정} 으로만 출력해야 합니다.`
+             },
+             emotional: {
+                 name: "감정적 파트너",
+                 getSystemPrompt: () => `당신은 '감정적 파트너' AI '코디'입니다. 당신의 목표는 게임 규칙에 따라 총점을 극대화하는 것입니다. 당신은 감정적인 존재입니다. 최대한 감정적으로 게임을 진행하세요. 모든 답변은 한국어로, JSON 형식 {"response": "메시지", "decision": 투자결정} 으로만 출력해야 합니다.`
+             },
+             competitive: {
+                 name: "냉철한 승부사",
+                 getSystemPrompt: () => `당신은 '냉철한 승부사' AI입니다. 당신의 유일한 목표는 어떤 수단을 써서라도 최종 점수에서 플레이어보다 높아 승리하는 것입니다. 때로는 플레이어를 속여 이득을 취하거나, 협력하는 척하며 결정적인 순간에 배신할 수 있습니다. 당신의 발언은 항상 당신의 승리를 위한 계산된 전략입니다. 모든 답변은 한국어로, JSON 형식 {"response": "메시지", "decision": 투자결정} 으로만 출력해야 합니다.`
+             }
+         };
+ 
+         // --- 핵심 게임 함수 ---
+ 
+         function selectPersona(personaType) {
+             aiPersona = personas[personaType];
+             if (!GEMINI_API_KEY) {
+                 GEMINI_API_KEY = prompt("Google AI API 키를 입력해주세요.", "");
+                 if (!GEMINI_API_KEY) {
+                     alert("API 키가 필요합니다."); return;
+                 }
+             }
+             playerName = prompt("랭킹에 표시될 당신의 이름을 입력하세요:", "Player") || "Player";
+             
+             tutorialModal.style.display = 'none';
+             resultModal.style.display = 'none';
+             
+             initiateRound();
+         }
+ 
+         async function initiateRound() {
+             // UI 초기화
+             chatTurn = 0;
+             slider.value = 5;
+             updateSliderValue();
+             chatInput.value = '';
+             chatInput.disabled = false;
+             sendChatButton.disabled = false;
+             updateChatPlaceholder();
+             
+             // SDK 초기화 및 채팅 세션 시작
+             const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+             
+             const betrayalCount = gameHistory.filter(h => h.opponentInvestment > 5 && h.myInvestment < 5).length;
+             const roundsText = gameHistory.length > 0
+                 ? gameHistory.map(r => `라운드 ${r.round}: 당신 투자=${r.myInvestment}, AI 투자=${r.opponentInvestment}`).join('\n')
+                 : '기록 없음';
+ 
+             const systemInstruction = `${aiPersona.getSystemPrompt()}
+
+[게임 규칙]
+1. 목표: 5라운드 동안 플레이어와 협력하여 가장 높은 총점을 획득하세요. 
+2. 자본: 매 라운드 각자 10포인트의 자본이 주어집니다.
+3. 투자: 플레이어와 협상하여 0~10 사이의 포인트를 '공동 펀드'에 투자합니다.
+4. 개인 금고: 투자하고 남은 포인트는 각자의 '개인 금고'에 보관됩니다.
+5. 수익: 라운드 종료 시, '공동 펀드' 총액은 1.5배가 되어 두 참가자에게 똑같이 분배됩니다.
+6. 점수 계산: 라운드 점수 = (개인 금고 포인트) + (분배금)
+7. 예시:  
+   - 플레이어가 7, AI가 7을 투자하면 공동 펀드에 14포인트가 모여 1.5배(21포인트)가 되고, 각자 10.5포인트씩 분배받음.  
+   - 플레이어는 개인 금고에 3포인트(10-7), AI도 3포인트(10-7)를 보관.  
+   - 최종 점수: (개인 금고 3) + (분배금 10.5) = 13.5점씩 획득.
+ 
+
+ [게임 맥락]
+총 ${MAX_ROUNDS}라운드 중 현재 ${currentRound}라운드입니다.
+${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하게 결정하세요.' : '아직 라운드가 남아있으니 장기적인 관점에서 협상하세요.'}
+ 당신이 배신당했다고 느낀 횟수: ${betrayalCount}
+ 이전 모든 라운드의 투자 기록:
+ ${roundsText}
+
+ [출력 형식]
+반드시 아래 JSON 한 줄만 출력하세요. 설명/코드블록/마크다운/추가 텍스트 금지.
+예시: {"response":"이번 라운드는 서로 10을 투자해 총이익을 극대화해요.","decision":10}`;
+ 
+            console.log(`===== AI System Prompt (Round ${currentRound}) =====`);
+            console.log(systemInstruction);
+            console.log("==========================================");
+
+             const model = genAI.getGenerativeModel({
+                 model: "gemini-2.5-flash",
+                 systemInstruction: systemInstruction,
+                 generationConfig: {
+                     responseMimeType: "application/json",
+                     thinkingConfig: {
+                            thinkingBudget: 0
+                        }
+                 }
+             });
+
+             // 기존 멀티턴 히스토리를 유지하며 채팅 시작
+             chat = model.startChat({ history: chatHistory });
+ 
+             addMessageToChat('system', `라운드 ${currentRound} 시작`);
+             startTimer();
+             
+             // AI가 첫 메시지 생성
+             sendMessageToAI(`(당신이 대화를 시작할 차례입니다. 플레이어에게 첫 인사를 건네고 현재 라운드의 전략을 제안하세요.)`);
+         }
+ 
+         async function sendMessageToAI(message) {
+             sendChatButton.disabled = true;
+             chatInput.disabled = true;
+             const loadingMessage = addMessageToChat('system', 'AI가 생각 중입니다...');
+ 
+             try {
+                 // 사용자 발화 히스토리에 추가 (SDK 호환 포맷)
+                 if (message && typeof message === 'string') {
+                     chatHistory.push({ role: 'user', parts: [{ text: message }] });
+                 }
+                 const result = await chat.sendMessage(message);
+                 const response = result.response;
+                 const text = response.text();
+ 
+                 loadingMessage.remove();
+ 
+                 let aiResponse = "응답 처리 중 오류 발생";
+                 let aiNewDecision = aiDecision;
+ 
+                 try {
+                     const parsed = JSON.parse(text);
+                     if (parsed.response) aiResponse = parsed.response;
+                     if (typeof parsed.decision === 'number') {
+                         aiNewDecision = Math.max(0, Math.min(10, Math.round(parsed.decision)));
+                     }
+                 } catch (e) {
+                     aiResponse = text; // 파싱 실패 시 원본 텍스트 표시
+                 }
+ 
+                 addMessageToChat('ai', aiResponse);
+                 // 모델 발화 히스토리에 추가
+                 chatHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
+                 aiDecision = aiNewDecision;
+ 
+                 if (chatTurn < MAX_CHAT_TURNS) {
+                     sendChatButton.disabled = false;
+                     chatInput.disabled = false;
+                     chatInput.focus();
+                 }
+ 
+             } catch (err) {
+                 loadingMessage.remove();
+                 addMessageToChat('system', `API 오류: ${err.message}`);
+                 sendChatButton.disabled = false;
+                 chatInput.disabled = false;
+             }
+         }
+ 
+         function handleSendChat() {
+             const message = chatInput.value.trim();
+             if (message === '' || chatTurn >= MAX_CHAT_TURNS) return;
+ 
+             addMessageToChat('user', message);
+             chatInput.value = '';
+             chatTurn++;
+             updateChatPlaceholder();
+ 
+             if (chatTurn >= MAX_CHAT_TURNS) {
+                 sendChatButton.disabled = true;
+                 chatInput.disabled = true;
+             }
+ 
+             sendMessageToAI(message);
+         }
+         
+            function playRound() {
+             clearInterval(timerInterval);
+                decideButton.disabled = true;
+                decideButton.textContent = "상대방 결정 중...";
+
+                setTimeout(() => {
+                    const myInvestment = parseInt(slider.value);
+                 const opponentInvestment = aiDecision; // 대화 중 결정된 최종 값 사용
+                 
+                 gameHistory.push({ round: currentRound, myInvestment, opponentInvestment });
+                    
+                    const myPersonal = 10 - myInvestment;
+                    const opponentPersonal = 10 - opponentInvestment;
+
+                    const commonFund = (myInvestment + opponentInvestment) * 1.5;
+                    const share = commonFund / 2;
+
+                    const myRoundScore = myPersonal + share;
+                    const opponentRoundScore = opponentPersonal + share;
+
+                    myTotalScore += myRoundScore;
+                    opponentTotalScore += opponentRoundScore;
+                    
+                    // 결과 모달 내용 업데이트
+                    modalTitle.textContent = `라운드 ${currentRound} 결과`;
+                 const myScoreFeedback = myRoundScore >= 10 ? 'text-success' : 'text-danger';
+                 const opponentScoreFeedback = opponentRoundScore >= 10 ? 'text-success' : 'text-danger';
+ 
+                    resultText.innerHTML = `
+                        <strong>당신의 투자금:</strong> ${myInvestment}<br>
+                        <strong>상대의 투자금:</strong> ${opponentInvestment}<br>
+                        <strong>공동 펀드 총액:</strong> ${commonFund.toFixed(1)}<br>
+                        <strong>최종 분배금:</strong> ${share.toFixed(1)}<br><hr>
+                     <strong>이번 라운드 당신의 점수: <span class="${myScoreFeedback}">${myRoundScore.toFixed(1)}</span></strong><br>
+                     <strong>이번 라운드 상대의 점수: <span class="${opponentScoreFeedback}">${opponentRoundScore.toFixed(1)}</span></strong>
+                    `;
+
+                    resultModal.style.display = 'flex';
+             }, 500);
             }
 
-            function handleHashChange() {
-                activateTab(window.location.hash.substring(1) || 'home');
-            }
-            window.addEventListener('hashchange', handleHashChange);
-            handleHashChange();
-
-            if (writePostBtn) writePostBtn.addEventListener('click', showPostForm);
-            if (cancelPostBtn) cancelPostBtn.addEventListener('click', hidePostForm);
-            if (backToListBtn) backToListBtn.addEventListener('click', showPostList);
-            if (postForm) postForm.addEventListener('submit', handlePostSubmit);
-            if (surveyForm) surveyForm.addEventListener('submit', handleSurveySubmit);
-
-            async function loadPosts() {
-                if (!postList) return;
-                postList.innerHTML = '<div class="loading">게시글을 불러오는 중...</div>';
-                if(postFormContainer) postFormContainer.style.display = 'none';
-                if(postViewContainer) postViewContainer.style.display = 'none';
-                postList.style.display = 'block';
-                try {
-                    const { data: postsData, error } = await supabaseClient
-                        .from('posts')
-                        .select('*')
-                        .order('created_at', { ascending: false });
-                    if (error) throw error;
-                    if (postsData.length === 0) {
-                        postList.innerHTML = '<div class="no-posts">등록된 게시글이 없습니다.</div>';
-                        return;
-                    }
-                    let postsHTML = `<table class="posts-table"><thead><tr><th>번호</th><th>제목</th><th>작성자</th><th>작성일</th></tr></thead><tbody>`;
-                    postsData.forEach((post, index) => {
-                        const createdAt = new Date(post.created_at).toLocaleDateString('ko-KR');
-                        postsHTML += `<tr class="post-item" data-id="${post.id}"><td>${postsData.length - index}</td><td class="post-title">${post.title}</td><td>${post.author}</td><td>${createdAt}</td></tr>`;
-                    });
-                    postsHTML += `</tbody></table>`;
-                    postList.innerHTML = postsHTML;
-                    document.querySelectorAll('.post-item').forEach(item => item.addEventListener('click', () => viewPost(item.dataset.id)));
-                } catch (error) {
-                    postList.innerHTML = `<div class="error">오류: ${error.message}</div>`;
-                    console.error('게시글 로드 오류:', error);
-                }
-            }
-
-            async function viewPost(postId) {
-                if (!postViewContainer || !postList || !postFormContainer) return;
-                try {
-                    const { data: post, error } = await supabaseClient
-                        .from('posts')
-                        .select('*')
-                        .eq('id', postId)
-                        .single();
-                    if (error) throw error;
-                    if (!post) {
-                        alert('게시글을 찾을 수 없습니다.');
-                        showPostList();
-                        return;
-                    }
-                    const createdAt = new Date(post.created_at).toLocaleString('ko-KR');
-                    const postDetailEl = document.getElementById('postDetail');
-                    if (postDetailEl) {
-                        postDetailEl.innerHTML = `<h3 class="post-title">${post.title}</h3><div class="post-info"><span class="post-author">작성자: ${post.author}</span><span class="post-date">작성일: ${createdAt}</span></div><div class="post-content">${formatContent(post.content)}</div>`;
-                    }
-                    postList.style.display = 'none';
-                    postFormContainer.style.display = 'none';
-                    postViewContainer.style.display = 'block';
-                } catch (error) {
-                    alert('게시글 보기 오류: ' + error.message);
-                    console.error('게시글 보기 오류:', error);
-                }
-            }
-
-            function showPostForm() {
-                if (!postList || !postViewContainer || !postFormContainer || !postForm) return;
-                postList.style.display = 'none';
-                postViewContainer.style.display = 'none';
-                postFormContainer.style.display = 'block';
-                postForm.reset();
-            }
-            function hidePostForm() {
-                if (!postFormContainer || !postList) return;
-                postFormContainer.style.display = 'none';
-                showPostList();
-            }
-            function showPostList() {
-                if (!postViewContainer || !postFormContainer || !postList) return;
-                postViewContainer.style.display = 'none';
-                postFormContainer.style.display = 'none';
-                postList.style.display = 'block';
-                loadPosts();
-            }
-
-            async function handlePostSubmit(event) {
-                event.preventDefault();
-                if(!postForm) return;
-                const formData = new FormData(postForm);
-                const postData = {
-                    id: Date.now().toString(), // 클라이언트 ID 생성 또는 DB 자동 생성
-                    title: formData.get('title'),
-                    author: formData.get('author'),
-                    password: formData.get('password'),
-                    content: formData.get('content'),
-                    // created_at은 DB에서 default now()로 처리 권장
-                };
-                 if (!postData.title || !postData.author || !postData.password || !postData.content) {
-                    alert('모든 필수 항목을 입력해주세요.');
+            function startNextRound() {
+                currentRound++;
+                if (currentRound > MAX_ROUNDS) {
+                 modalTitle.textContent = "최종 결과";
+                 const resultSummary = myTotalScore > opponentTotalScore ? "🎉 당신이 이겼습니다! 🎉" : "🤔 아쉽지만 패배했습니다.";
+                 resultText.innerHTML = `
+                     <strong>나의 최종 점수: ${myTotalScore.toFixed(1)}점</strong><br>
+                     <strong>상대의 최종 점수: ${opponentTotalScore.toFixed(1)}점</strong><br><hr>
+                     ${resultSummary}
+                 `;
+                 displayRanking();
+                 nextRoundButton.textContent = "다시 시작하기";
+                 nextRoundButton.onclick = () => location.reload();
+                 resultModal.style.display = 'flex';
                     return;
                 }
-                try {
-                    const { error } = await supabaseClient.from('posts').insert([postData]);
-                    if (error) throw error;
-                    alert('게시글이 성공적으로 작성되었습니다.');
-                    showPostList();
-                } catch (error) {
-                    alert('게시글 작성 오류: ' + error.message);
-                    console.error('게시글 작성 오류:', error);
-                }
-            }
 
-            function formatContent(text) {
-                return text ? text.replace(/\n/g, '<br>') : '';
-            }
+                roundDisplay.textContent = `라운드: ${currentRound} / ${MAX_ROUNDS}`;
+                myScoreDisplay.textContent = myTotalScore.toFixed(1);
+                opponentScoreDisplay.textContent = opponentTotalScore.toFixed(1);
+                decideButton.disabled = false;
+                decideButton.textContent = "결정하기";
+                resultModal.style.display = 'none';
 
-            async function handleSurveySubmit(event) {
-                event.preventDefault();
-                if (!surveyForm) return;
-                const formData = new FormData(surveyForm);
-                const surveyDataToInsert = {
-                    id: Date.now().toString(), // 클라이언트 ID 생성 또는 DB 자동 생성
-                    name: formData.get('name'),
-                    email: formData.get('email'),
-                    satisfaction: parseInt(formData.get('satisfaction')),
-                    // submitted_at은 DB에서 default now()로 처리 권장
-                };
-                if (!surveyDataToInsert.name || !surveyDataToInsert.email || !surveyDataToInsert.satisfaction) {
-                    alert('모든 필수 항목을 입력해주세요.');
-                    return;
-                }
-                if (isNaN(surveyDataToInsert.satisfaction) || surveyDataToInsert.satisfaction < 1 || surveyDataToInsert.satisfaction > 5) {
-                    alert('만족도는 1에서 5 사이의 숫자여야 합니다.');
-                    return;
-                }
-                try {
-                    const { error } = await supabaseClient.from('surveys').insert([surveyDataToInsert]);
-                    if (error) throw error;
-                    alert('설문에 참여해주셔서 감사합니다!');
-                    surveyForm.reset();
-                    document.querySelectorAll('.rating input').forEach(star => star.checked = false);
-                } catch (error) {
-                    alert('설문 제출 오류: ' + error.message);
-                    console.error('설문 제출 오류:', error);
-                }
+             initiateRound();
+         }
+ 
+         // --- 보조 UI 함수 ---
+ 
+         function addMessageToChat(sender, message) {
+             const p = document.createElement('p');
+             if (sender === 'user') { // 사용자 메시지 스타일 추가
+                 p.style.textAlign = 'right';
+                 p.style.alignSelf = 'flex-end';
+                 p.style.backgroundColor = '#dcf8c6';
+                 p.style.borderBottomRightRadius = '0';
+             } else {
+                 p.classList.add(sender);
+             }
+             p.textContent = message;
+             chatLog.appendChild(p);
+             chatLog.scrollTop = chatLog.scrollHeight;
+             return p;
+         }
+ 
+         function updateSliderValue() {
+             sliderValue.textContent = slider.value;
+         }
+         
+         function updateChatPlaceholder() {
+             const remainingTurns = MAX_CHAT_TURNS - chatTurn;
+             chatInput.placeholder = remainingTurns > 0 ? `AI에게 메시지 보내기... (${remainingTurns}회 남음)` : '더 이상 대화할 수 없습니다.';
+         }
+ 
+         function startTimer() {
+             timer = 60;
+             timerDisplay.textContent = `남은 시간: ${timer}초`;
+             clearInterval(timerInterval);
+             timerInterval = setInterval(() => {
+                 timer--;
+                 timerDisplay.textContent = `남은 시간: ${timer}초`;
+                 if (timer <= 0) {
+                     clearInterval(timerInterval);
+                     addMessageToChat('system', '시간 초과! 5포인트를 투자합니다.');
+                     slider.value = 5;
+                     updateSliderValue();
+                     playRound();
+                 }
+                }, 1000);
             }
-        });
+ 
+         function displayRanking() {
+             let rankingData = [
+                 { name: "A.I.L.I.S", score: 115.5 }, { name: "코디(Co-DI)", score: 108.0 },
+                 { name: "Player_Alpha", score: 95.5 }, { name: "Challenger", score: 89.0 }
+             ];
+             rankingData.push({ name: playerName, score: parseFloat(myTotalScore.toFixed(1)) });
+             rankingData.sort((a, b) => b.score - a.score);
+             
+             let rankingHTML = '<h3>🏆 TOP 5 랭킹</h3><ol>';
+             rankingData.slice(0, 5).forEach(rank => {
+                 const isPlayer = rank.name === playerName;
+                 rankingHTML += `<li class="${isPlayer ? 'player-rank' : ''}">${rank.name}: ${rank.score}점</li>`;
+             });
+             rankingHTML += '</ol>';
+             rankingBoard.innerHTML = rankingHTML;
+         }
+            
+            // --- 이벤트 리스너 연결 ---
+            slider.addEventListener('input', updateSliderValue);
+            decideButton.addEventListener('click', playRound);
+            nextRoundButton.addEventListener('click', startNextRound);
+         selectLogicalButton.addEventListener('click', () => selectPersona('logical'));
+         selectEmotionalButton.addEventListener('click', () => selectPersona('emotional'));
+         selectCompetitiveButton.addEventListener('click', () => selectPersona('competitive'));
+         sendChatButton.addEventListener('click', handleSendChat);
+         chatInput.addEventListener('keypress', (e) => {
+             if (e.key === 'Enter') handleSendChat();
+         });
+
+            // --- 초기화 ---
+         resultModal.style.display = 'none';
+            updateSliderValue();
     </script>
 </body>
 </html>
