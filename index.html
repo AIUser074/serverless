@@ -183,6 +183,7 @@
                 <button id="select-logical">🤖 논리적 분석가</button>
                 <button id="select-emotional">❤️ 감정적 파트너</button>
                 <button id="select-competitive">🏆 냉철한 승부사</button>
+                <button id="select-titfortat">🤝 원칙주의 협력가</button>
             </div>
             <hr style="margin: 20px 0;">
             <h2>게임 방법 설명</h2>
@@ -277,6 +278,7 @@
          const selectLogicalButton = document.getElementById('select-logical');
          const selectEmotionalButton = document.getElementById('select-emotional');
          const selectCompetitiveButton = document.getElementById('select-competitive');
+         const selectTitfortatButton = document.getElementById('select-titfortat');
          const rankingBoard = document.getElementById('ranking-board');
          const chatInput = document.getElementById('chat-input');
          const sendChatButton = document.getElementById('send-chat-button');
@@ -312,7 +314,25 @@
              competitive: {
                  name: "냉철한 승부사",
                  getSystemPrompt: () => `당신은 '냉철한 승부사' AI입니다. 당신의 유일한 목표는 어떤 수단을 써서라도 최종 점수에서 플레이어보다 높아 승리하는 것입니다. 때로는 플레이어를 속여 이득을 취하거나, 협력하는 척하며 결정적인 순간에 배신할 수 있습니다. 당신의 발언은 항상 당신의 승리를 위한 계산된 전략입니다. 모든 답변은 한국어로, JSON 형식 {"response": "메시지", "decision": 투자결정} 으로만 출력해야 합니다.`
-             }
+             },
+            titfortat: {
+                name: "원칙주의 협력가",
+                getSystemPrompt: () => {
+                    const lastRound = gameHistory.length > 0 ? gameHistory[gameHistory.length - 1] : null;
+                    let decisionLogic = "이번이 첫 라운드이므로, 저는 먼저 신뢰를 보이기 위해 10을 투자해 협력하겠습니다.";
+                    if (lastRound) {
+                        decisionLogic = `이전 라운드에서 플레이어가 ${lastRound.myInvestment}을 투자했으므로, 저는 그 행동을 그대로 따라 ${lastRound.myInvestment}을 투자하여 상대의 선택을 존중하겠습니다.`;
+                    }
+
+                    return `당신은 '원칙주의 협력가' AI입니다. 당신의 행동 원칙은 매우 간단합니다.
+1. 첫 라운드에는 무조건 최대한 협력하여 신뢰를 얻습니다. (10 투자)
+2. 그 이후 모든 라운드에서는 바로 이전 라운드에서 플레이어가 했던 행동을 그대로 따라합니다. (플레이어가 5를 투자했다면, 당신도 5를 투자)
+이것이 당신의 유일한 행동 규칙이며, 절대 벗어나지 않습니다. 이 전략을 '팃포탯'이라고 부르지 마세요.
+[현재 당신의 결정 논리]
+${decisionLogic}
+모든 답변은 한국어로, JSON 형식 {"response": "메시지", "decision": 투자결정} 으로만 출력해야 합니다.`;
+                }
+            }
          };
  
          // --- 핵심 게임 함수 ---
@@ -399,7 +419,14 @@ ${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하�
              startTimer();
              
              // AI가 첫 메시지 생성
-             sendMessageToAI(`(당신이 대화를 시작할 차례입니다. 플레이어에게 첫 인사를 건네고 현재 라운드의 전략을 제안하세요.)`);
+            let initialAiMessage;
+            if (currentRound === 1) {
+                initialAiMessage = `(당신이 대화를 시작할 차례입니다. 플레이어에게 첫 인사를 건네고 이번 게임의 목표와 첫 라운드 전략을 제안하세요.)`;
+            } else {
+                const lastRound = gameHistory[gameHistory.length - 1];
+                initialAiMessage = `(라운드 ${currentRound}입니다. 이전 라운드에서 당신은 ${lastRound.opponentInvestment}을, 플레이어는 ${lastRound.myInvestment}을 투자했습니다. 그 결과를 바탕으로 이번 라운드의 대화를 시작하세요.)`;
+            }
+            sendMessageToAI(initialAiMessage);
          }
  
          async function sendMessageToAI(message) {
@@ -427,6 +454,16 @@ ${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하�
                      if (typeof parsed.decision === 'number') {
                          aiNewDecision = Math.max(0, Math.min(10, Math.round(parsed.decision)));
                      }
+ 
+                    // [수정] 팃포탯 페르소나의 결정을 코드 레벨에서 강제
+                    if (aiPersona.name === "원칙주의 협력가") {
+                        if (currentRound === 1) {
+                            aiNewDecision = 10;
+                        } else {
+                            const lastRound = gameHistory[gameHistory.length - 1];
+                            aiNewDecision = lastRound.myInvestment;
+                        }
+                    }
                  } catch (e) {
                      aiResponse = text; // 파싱 실패 시 원본 텍스트 표시
                  }
@@ -603,6 +640,7 @@ ${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하�
          selectLogicalButton.addEventListener('click', () => selectPersona('logical'));
          selectEmotionalButton.addEventListener('click', () => selectPersona('emotional'));
          selectCompetitiveButton.addEventListener('click', () => selectPersona('competitive'));
+         selectTitfortatButton.addEventListener('click', () => selectPersona('titfortat'));
          sendChatButton.addEventListener('click', handleSendChat);
          chatInput.addEventListener('keypress', (e) => {
              if (e.key === 'Enter') handleSendChat();
