@@ -257,8 +257,6 @@
         </div>
     </div>
 
-     <script src="https://apis.google.com/js/api.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/jsrsasign@10.8.6/lib/jsrsasign-all-min.js"></script>
      <script type="module">
          // --- SDK Import ---
          import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
@@ -304,24 +302,6 @@
          let aiDecision = 5; // AI의 잠정적인 결정
          let chatHistory = []; // SDK 호환 멀티턴 히스토리 {role, parts:[{text}]}
  
-         // --- [추가] Google Sheets 연동 정보 ---
-        const GOOGLE_SHEET_ID = '1ZmCRt3oeHHN8xQiWhl8l70m7PifFgEI8Yr2t1xtyTFM';
-        // 🚨 보안 경고: 아래 서비스 계정 키는 클라이언트 코드에 절대 노출해서는 안 됩니다.
-        // 이것은 프로토타입 목적으로만 사용되며, 실제 환경에서는 서버에서 처리해야 합니다.
-        const GOOGLE_SERVICE_ACCOUNT_KEY = {
-                "type": "service_account",
-                "project_id": "gen-lang-client-0848963700",
-                "private_key_id": "3c190c02f77b10138e3ed0eabe46847d407de47a",
-                "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCRptdjJv9HB890\nNh+tHa1/fN/jgarVkJD3V3Ti1ClH1ky0MMtBhVe7P8VPsFcSgelJMnv19iq5+fgb\nwKKYwSd1IGkoUQYqoUF9h5BJ+oY5y3MpCVA2CNSZ41JvYRrs/CZooILc5pp0PoP6\nBQsIc1wMWnl0puwm/mrpr9yjKvodv+TTTH5SE7E+qg4q/WKBFMVuiHaeMArg1g6Z\nehzco7eGgMFiKCRLKN17jHtajt/+l7ucKpgJdApNtp7LSDReHWPwnTDVhy6PN3Os\n0JKgkhEeoleAS787lleUrp3i0jViOVnOrAbIIdNr388bMUikyZveWfcxto+9XJkn\nufVJvglLAgMBAAECggEAFs2kthjSabf+0kZxAiT911JhKRjRers1/wt5uNOXnPAf\ntSxYfisWt7G9vgKxNywQro2RW8pNGS3aGto3eqvu9gb7f7zjtsPlYXZacEKhRiYk\nov2aycLrKiatbtOoqAa4KrRKmLQf5WguOHQWrJ2HAUYe8tT5bwdxDKIkbIVbgFGg\n0yfRi41ql05bpT++4WuFX42giIQpmt3fErO2Aey3aLPIZ35W/BLBsHs05iKcAj/d\nwmhzYYdG0htnVA4oMtUCw1sujPygePIl7k2KsP5FBHfj2BL4Wq+qdN2GPrS4PQMJ\nUa4S+PQ1jHLaSmlKwmB2AgpnRgYgZudSquSso9Ee6QKBgQDFHrF3vJOv4O6ThCy4\nNiSTeL83kBFds/GNhGhbVmLgNaxi+cxQsxi0c1njDIFU/OPCo5Y2q85QX11rrbTk\nna7V3cIJO2Onm+qv6cIy9VdWppmjKM8fyYqSD2U/+8RdenyJa44Cw0IQ+jMjCAya\n6r85ufPjcQ0cecHyhZEA3y1wkwKBgQC9KH63Ak7jOI7bbiGcxzRWwnONnonPGB9M\n71NIM5Avtz6nQUGBOTwEEzc2tEkYXVwystbHFnLOl7QrTqPcC8z9ETkk1BSyAypD\nCIrv3edoTWvvfJrKCza+lXE1k9i2sODFcPE2zd3873zTEKvQ+hglbRr7bZfcwIxg\nsWu+xhzPaQKBgBYcLj3G+i3VJg2H2thCwnGELraVw0zmXSbJfkcYdni9rHthl4hJ\nvnCnK6LrCSq2PvnbDYNOXBLpz3m/fzXRdgXpHNWaQsBPHdDjgHPkzwoaH8uMTUc8\nfP2LGolFvS3bClMDrGck7akn10qLoZZS1GYuNGwDhzv1cEq6rpwRbHBfAoGBALRd\n163z0nsRZA7SDdTrkfmkgwCoCmnha381uWjgWf1VsrVTIP3yMEsGc6CC+iv0YcSq\nCOhffGuH9jFRVCevTPCGKsH2RCGVqQewLqMYKd6n7GK4ovRDCxlhcEiRSJSzRjCe\nSDNky+ayCYlMnTiwMLQHPDJAxwykwXY11zJav//5AoGBAKBU2cNTLIxgZETH0vUB\nSRKMZByrvhRCqw90mxQMKEkaa1MvOEZohA7uP9nE9dXVNXs+uzZKqqU3oXUmlY1G\nAdAUGmuWcautQRdVduB4rbeAfk0EfUuNE94vsTIsrtV79qpw9z3lmF0wXJbzdrvy\nVLJ8g8+XHtfBPYB+5aVoaB9I\n-----END PRIVATE KEY-----\n",
-                "client_email": "min-495@gen-lang-client-0848963700.iam.gserviceaccount.com",
-                "client_id": "115593827588369213990",
-                "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-                "token_uri": "https://oauth2.googleapis.com/token",
-                "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-                "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/min-495%40gen-lang-client-0848963700.iam.gserviceaccount.com",
-                "universe_domain": "googleapis.com"
-                };
-
          // --- AI 페르소나 정의 ---
          const personas = {
              logical: {
@@ -659,83 +639,46 @@ ${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하�
         async function displayRanking() {
             rankingBoard.innerHTML = '<h3>🏆 TOP 5 랭킹</h3><p>랭킹을 불러오는 중...</p>';
             try {
-                // 1) Google API 로드 및 인증 (읽기 전용)
-                await new Promise((resolve, reject) => gapi.load('client', { callback: resolve, onerror: reject }));
+                 // 1. 백엔드 API를 통해 랭킹 데이터 가져오기
+                const response = await fetch('/api/getRankings');
+                const result = await response.json();
 
-                const now = Math.floor(Date.now() / 1000);
-                const tokenPayload = {
-                    iss: GOOGLE_SERVICE_ACCOUNT_KEY.client_email,
-                    scope: 'https://www.googleapis.com/auth/spreadsheets.readonly',
-                    aud: 'https://oauth2.googleapis.com/token',
-                    exp: now + 3600,
-                    iat: now
-                };
-                const jwt = KJUR.jws.JWS.sign(null, { alg: 'RS256', typ: 'JWT' }, tokenPayload, GOOGLE_SERVICE_ACCOUNT_KEY.private_key);
-
-                const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
-                });
-                const tokenData = await tokenResponse.json();
-                if (!tokenData.access_token) throw new Error('랭킹 조회 인증 실패');
-
-                gapi.auth.setToken({ access_token: tokenData.access_token });
-                await gapi.client.init({
-                    apiKey: "AIzaSyAfvFU1BibSgkncqe-UhkrdmxHgd2ac4PY",
-                    discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
-                });
-
-                // 2) Result2에서 PlayerID(B), PlayerName(C), Persona(D), MyTotalScore(E) 읽기
-                const response = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: GOOGLE_SHEET_ID,
-                    range: 'Result2!B2:E'
-                });
-                const rows = response.result.values || [];
-
-                // 3) 시트 데이터만으로 Top5 구성 (이제 PlayerName 기준)
-                const sheetScores = new Map(); // name -> { name, score }
-                rows.forEach(row => {
-                    const name = row[1];
-                    const score = parseFloat(row[3]);
-                    if (name && !isNaN(score)) {
-                        if (!sheetScores.has(name) || sheetScores.get(name).score < score) {
-                            sheetScores.set(name, { name, score });
-                        }
-                    }
-                });
-
-                const sortedFromSheet = Array.from(sheetScores.entries())
-                    .sort((a, b) => b[1].score - a[1].score);
-
-                // Top 5 (시트 데이터만)
-                let rankingHTML = '<h3>🏆 TOP 5 랭킹</h3><ol>';
-                const top5 = sortedFromSheet.slice(0, 5);
-                top5.forEach(([name, data]) => {
-                    const isPlayer = name === playerName;
-                    rankingHTML += `<li class="${isPlayer ? 'player-rank' : ''}">${data.name}: ${data.score.toFixed(1)}점</li>`;
-                });
-                rankingHTML += '</ol>';
-
-                // 4) 본인 순위 계산: 현재 세션 점수를 포함해 랭크 산정 (표시는 별도)
-                const augmented = new Map(sheetScores);
-                const currentBest = augmented.get(playerName)?.score ?? -Infinity;
-                const bestWithCurrent = Math.max(currentBest, myTotalScore || -Infinity);
-                if (!isNaN(bestWithCurrent) && bestWithCurrent !== -Infinity) {
-                    augmented.set(playerName, { name: playerName, score: bestWithCurrent });
-                }
-                const sortedAugmented = Array.from(augmented.entries())
-                    .sort((a, b) => b[1].score - a[1].score);
-                const myIndex = sortedAugmented.findIndex(([name]) => name === playerName);
-
-                // 5) 본인이 Top5 밖이면 별도 표시
-                const inTop5FromSheet = top5.findIndex(([name]) => name === playerName) !== -1;
-                if (!inTop5FromSheet && myIndex >= 0) {
-                    const myRank = myIndex + 1;
-                    const myScore = sortedAugmented[myIndex][1].score;
-                    rankingHTML += `<hr style="margin: 10px 0;"><p class="player-rank"><strong>나의 순위: ${myRank}위 (${myScore.toFixed(1)}점)</strong></p>`;
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || '랭킹 데이터를 가져오지 못했습니다.');
                 }
 
+                const sortedRanking = result.data || [];
+                
+                // 2. 랭킹 HTML 생성
+                let rankingHTML = '<h3>🏆 TOP 5 랭킹</h3>';
+                if (sortedRanking.length === 0) {
+                    rankingHTML += '<p>아직 랭킹 데이터가 없습니다.</p>';
+                } else {
+                    rankingHTML += '<ol>';
+                    sortedRanking.forEach(player => {
+                        const isPlayer = player.name === playerName;
+                        rankingHTML += `<li class="${isPlayer ? 'player-rank' : ''}">${player.name}: ${player.score.toFixed(1)}점</li>`;
+                    });
+                    rankingHTML += '</ol>';
+                }
+
+                // 3. 현재 플레이어의 전체 순위 계산 및 표시 (Top 5 밖일 경우)
+                // (이 로직은 getRankings API가 전체 순위 데이터를 반환하도록 수정해야 완전해집니다. 지금은 Top5 데이터만 사용합니다.)
+                // 우선, 현재 플레이어가 Top5 목록에 있는지 확인합니다.
+                const myRankInTop5 = sortedRanking.find(p => p.name === playerName);
+                
+                // 만약 Top5에 없다면, 별도의 API 호출이나 전체 데이터 반환이 필요하지만,
+                // 여기서는 현재 점수와 비교하여 간단히 표시하는 로직만 남겨둡니다.
+                // 정확한 전체 순위를 보려면 getRankings API가 전체 정렬된 목록을 반환해야 합니다.
+                // 지금은 "본인이 Top5에 없을 경우" 시나리오를 단순화하여 처리합니다.
+                
+                // 임시 방편: 현재 플레이어의 점수가 Top5의 마지막보다 낮은지 확인
+                const lastPlaceScore = sortedRanking.length > 0 ? sortedRanking[sortedRanking.length - 1].score : Infinity;
+
+                if (!myRankInTop5 && myTotalScore < lastPlaceScore) {
+                     rankingHTML += `<hr style="margin: 10px 0;"><p class="player-rank"><strong>나의 점수: ${myTotalScore.toFixed(1)}점 (Top 5 밖)</strong></p>`;
+                }
+                
                 rankingBoard.innerHTML = rankingHTML;
 
             } catch (error) {
@@ -744,49 +687,13 @@ ${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하�
             }
         }
  
-         // --- [추가] Google Sheets 연동 함수 ---
-         async function saveResultsToSheet(button) {
+         // --- [수정] Google Sheets 연동 함수 ---
+        async function saveResultsToSheet(button) {
             button.disabled = true;
             button.textContent = '저장 중...';
 
             try {
-                // 1. gapi 클라이언트 로드
-                await new Promise((resolve, reject) => gapi.load('client', { callback: resolve, onerror: reject }));
-
-                // 2. JWT 생성 및 Access Token 요청 (서비스 계정 인증)
-                const now = Math.floor(Date.now() / 1000);
-                const tokenPayload = {
-                    iss: GOOGLE_SERVICE_ACCOUNT_KEY.client_email,
-                    scope: 'https://www.googleapis.com/auth/spreadsheets',
-                    aud: 'https://oauth2.googleapis.com/token',
-                    exp: now + 3600,
-                    iat: now
-                };
-
-                const jwtHeader = { alg: 'RS256', typ: 'JWT' };
-                const jwt = KJUR.jws.JWS.sign(null, jwtHeader, tokenPayload, GOOGLE_SERVICE_ACCOUNT_KEY.private_key);
-
-                const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer&assertion=${jwt}`
-                });
-
-                const tokenData = await tokenResponse.json();
-                if (!tokenData.access_token) {
-                    throw new Error('Access Token 획득 실패: ' + (tokenData.error_description || '응답을 확인하세요.'));
-                }
-                
-                gapi.auth.setToken({ access_token: tokenData.access_token });
-                
-                // 3. Sheets API 초기화
-                await gapi.client.init({
-                    apiKey: "AIzaSyAfvFU1BibSgkncqe-UhkrdmxHgd2ac4PY",
-                    discoveryDocs: ["https://sheets.googleapis.com/$discovery/rest?version=v4"],
-                });
-
-                // 4. 시트에 추가할 데이터 준비 (Result 시트)
-                const sheetNameResult = 'Result'; 
+                // 1. 백엔드로 보낼 데이터 준비
                 let myCumulativeScore = 0;
                 let opponentCumulativeScore = 0;
                 
@@ -801,43 +708,13 @@ ${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하�
                     opponentCumulativeScore += opponentRoundScore;
 
                     return [
-                        new Date().toISOString(),
-                        playerId, // PlayerID 추가
-                        playerName,
-                        aiPersona.name,
-                        h.round,
-                        h.myInvestment,
-                        h.opponentInvestment,
-                        myRoundScore.toFixed(1),
-                        opponentRoundScore.toFixed(1),
-                        myCumulativeScore.toFixed(1),
-                        opponentCumulativeScore.toFixed(1)
+                        new Date().toISOString(), playerId, playerName, aiPersona.name,
+                        h.round, h.myInvestment, h.opponentInvestment,
+                        myRoundScore.toFixed(1), opponentRoundScore.toFixed(1),
+                        myCumulativeScore.toFixed(1), opponentCumulativeScore.toFixed(1)
                     ];
                 });
 
-                const resultHeader = ['Timestamp', 'PlayerID', 'PlayerName', 'Persona', 'Round', 'MyInvestment', 'OpponentInvestment', 'MyRoundScore', 'OpponentRoundScore', 'MyTotalScore', 'OpponentTotalScore'];
-                const resultDataToAppend = [resultHeader, ...resultRows];
-
-                // 5. Result 시트에 데이터 추가
-                const existingDataResult = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: GOOGLE_SHEET_ID,
-                    range: `${sheetNameResult}!A1:A1`,
-                });
-                
-                const resourceResult = {
-                    values: existingDataResult.result.values ? resultRows : resultDataToAppend
-                };
-
-                await gapi.client.sheets.spreadsheets.values.append({
-                    spreadsheetId: GOOGLE_SHEET_ID,
-                    range: sheetNameResult,
-                    valueInputOption: 'USER_ENTERED',
-                    resource: resourceResult,
-                });
-
-                // --- [추가] Result2 시트에 요약 데이터 저장 ---
-                
-                const sheetNameResult2 = 'Result2';
                 const myRoundScores = gameHistory.map(h => {
                     const myPersonal = 10 - h.myInvestment;
                     const share = ((h.myInvestment + h.opponentInvestment) * 1.5) / 2;
@@ -851,37 +728,30 @@ ${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하�
                 }).join(',');
 
                 const summaryRow = [
-                    new Date().toISOString(),
-                    playerId,
-                    playerName,
-                    aiPersona.name,
-                    myTotalScore.toFixed(1),
-                    opponentTotalScore.toFixed(1),
-                    myRoundScores,
-                    opponentRoundScores
+                    new Date().toISOString(), playerId, playerName, aiPersona.name,
+                    myTotalScore.toFixed(1), opponentTotalScore.toFixed(1),
+                    myRoundScores, opponentRoundScores
                 ];
-                
-                const summaryHeader = ['Timestamp', 'PlayerID', 'PlayerName', 'Persona', 'MyTotalScore', 'OpponentTotalScore', 'MyRoundScores', 'OpponentRoundScores'];
-                const summaryDataToAppend = [summaryHeader, summaryRow];
-                
-                const existingDataResult2 = await gapi.client.sheets.spreadsheets.values.get({
-                    spreadsheetId: GOOGLE_SHEET_ID,
-                    range: `${sheetNameResult2}!A1:A1`,
+
+                const gameData = { resultRows, summaryRow };
+
+                // 2. Vercel 서버리스 함수(백엔드 API) 호출
+                //    로컬 테스트 시: http://localhost:3000/api/saveToSheet
+                //    Vercel 배포 후: 실제 Vercel URL
+                const response = await fetch('/api/saveToSheet', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gameData })
                 });
 
-                const resourceResult2 = {
-                    values: existingDataResult2.result.values ? [summaryRow] : summaryDataToAppend
-                };
+                const result = await response.json();
 
-                await gapi.client.sheets.spreadsheets.values.append({
-                    spreadsheetId: GOOGLE_SHEET_ID,
-                    range: sheetNameResult2,
-                    valueInputOption: 'USER_ENTERED',
-                    resource: resourceResult2,
-                });
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || '서버에서 저장 중 오류가 발생했습니다.');
+                }
 
                 button.textContent = '저장 완료!';
-                alert('게임 결과가 Google Sheet (Result, Result2)에 성공적으로 저장되었습니다!');
+                alert('게임 결과가 Google Sheet에 성공적으로 저장되었습니다!');
 
             } catch (error) {
                 console.error('Google Sheets 저장 중 오류 발생:', error);

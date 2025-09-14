@@ -1,0 +1,15 @@
+{
+  "name": "investment-game-backend",
+  "version": "1.0.0",
+  "description": "Backend serverless function for the investment game.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "googleapis": "^100.0.0"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
