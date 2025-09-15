@@ -107,7 +107,7 @@
 
         .action-container { text-align: center; }
         .slider-container { display: flex; align-items: center; gap: 15px; margin: 40px 0; }
-        .slider { flex-grow: 1; -webkit-appearance: none; height: 10px; background: #d3d3d3; border-radius: 5px; outline: none; }
+        .slider { flex-grow: 1; -webkit-appearance: none; appearance: none; height: 10px; background: #d3d3d3; border-radius: 5px; outline: none; }
         .slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 25px; height: 25px; background: var(--primary-color); cursor: pointer; border-radius: 50%; }
         .slider-label { font-weight: bold; color: var(--secondary-color); }
         .slider-value-display { font-size: 1.5em; font-weight: 700; color: var(--text-color); margin-bottom: 40px; }
@@ -170,6 +170,48 @@
         #chat-input:focus { outline: none; border-color: var(--primary-color); }
         #send-chat-button { padding: 0 15px; border: 1px solid var(--primary-color); background-color: var(--primary-color); color: white; font-weight: 500; cursor: pointer; border-radius: 0 8px 8px 0; }
         #send-chat-button:disabled { background-color: #a4b0be; border-color: #a4b0be; cursor: not-allowed;}
+
+        /* 추가된 CSS */
+        .persona-selection button.selected {
+            background-color: var(--secondary-color);
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        #game-setup-options {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .setup-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        .setup-row label {
+            font-weight: 500;
+        }
+        #player-name-input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 60%;
+        }
+        #round-slider-container {
+            width: 60%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        #round-slider {
+            width: 100%;
+        }
+        #round-value {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
         /* --- CSS 코드 끝 --- */
     </style>
 </head>
@@ -180,15 +222,31 @@
             <h2>AI 파트너 선택</h2>
             <p>이번 게임에서 협상할 AI의 성격을 선택해주세요.</p>
             <div class="persona-selection">
-                <button id="select-logical">🤖 논리적 분석가</button>
-                <button id="select-emotional">❤️ 감정적 파트너</button>
-                <button id="select-competitive">🏆 냉철한 승부사</button>
-                <button id="select-titfortat">🤝 원칙주의 협력가</button>
+                <button data-persona="logical">🤖 논리적 분석가</button>
+                <button data-persona="emotional">❤️ 감정적 파트너</button>
+                <button data-persona="competitive">🏆 냉철한 승부사</button>
+                <button data-persona="titfortat">🤝 원칙주의 협력가</button>
             </div>
+            
+            <!-- 게임 설정 영역 -->
+            <div id="game-setup-options" style="display: none;">
+                <div class="setup-row">
+                    <label for="player-name-input">닉네임 입력</label>
+                    <input type="text" id="player-name-input" placeholder="이름을 입력하세요">
+                </div>
+                <div class="setup-row">
+                    <label>라운드 선택</label>
+                    <div id="round-slider-container">
+                         <input type="range" id="round-slider" min="0" max="1" value="0">
+                         <span id="round-value">5</span>
+                    </div>
+                </div>
+            </div>
+
             <hr style="margin: 20px 0;">
             <h2>게임 방법 설명</h2>
             <div style="text-align: left; margin-top: 20px;">
-                <p><strong>목표:</strong> 5라운드 동안 AI 파트너와 협력하여 가장 높은 점수를 획득하세요.</p>
+                <p><strong>목표:</strong> AI 파트너와 협력하여 가장 높은 점수를 획득하세요.</p>
                 <ul>
                     <li>매 라운드 10포인트의 기본 자본이 주어집니다.</li>
                     <li>AI와 협상하여 0~10 사이의 포인트를 '공동 펀드'에 투자합니다.</li>
@@ -275,10 +333,12 @@
             const nextRoundButton = document.getElementById('next-round-button');
          const timerDisplay = document.getElementById('timer-display');
          const tutorialModal = document.getElementById('tutorial-modal');
-         const selectLogicalButton = document.getElementById('select-logical');
-         const selectEmotionalButton = document.getElementById('select-emotional');
-         const selectCompetitiveButton = document.getElementById('select-competitive');
-         const selectTitfortatButton = document.getElementById('select-titfortat');
+         const personaButtons = document.querySelectorAll('.persona-selection button');
+         const startGameButton = document.getElementById('start-game-button');
+         const gameSetupOptions = document.getElementById('game-setup-options');
+         const playerNameInput = document.getElementById('player-name-input');
+         const roundSlider = document.getElementById('round-slider');
+         const roundValue = document.getElementById('round-value');
          const rankingBoard = document.getElementById('ranking-board');
          const chatInput = document.getElementById('chat-input');
          const sendChatButton = document.getElementById('send-chat-button');
@@ -290,10 +350,11 @@
             let currentRound = 1;
             let myTotalScore = 0;
             let opponentTotalScore = 0;
-         const MAX_ROUNDS = 5;
+         let MAX_ROUNDS = 5;
          let timer = 60;
          let timerInterval;
          
+         let selectedPersonaType = null;
          let aiPersona = {};
          let gameHistory = []; // { round, myInvestment, opponentInvestment }
          let chat; // SDK Chat Session
@@ -365,6 +426,8 @@ ${decisionLogic}
  
          async function initiateRound() {
              // UI 초기화
+             roundDisplay.textContent = `라운드: ${currentRound} / ${MAX_ROUNDS}`;
+             decideButton.disabled = true; // 라운드 시작 시 결정 버튼 비활성화
              chatTurn = 0;
              slider.value = 5;
              updateSliderValue();
@@ -384,7 +447,7 @@ ${decisionLogic}
              const systemInstruction = `${aiPersona.getSystemPrompt()}
 
 [게임 규칙]
-1. 목표: 5라운드 동안 플레이어와 협력하여 가장 높은 총점을 획득하세요. 
+1. 목표: ${MAX_ROUNDS}라운드 동안 플레이어와 협력하여 가장 높은 총점을 획득하세요. 
 2. 자본: 매 라운드 각자 10포인트의 자본이 주어집니다.
 3. 투자: 플레이어와 협상하여 0~10 사이의 포인트를 '공동 펀드'에 투자합니다.
 4. 개인 금고: 투자하고 남은 포인트는 각자의 '개인 금고'에 보관됩니다.
@@ -479,6 +542,7 @@ ${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하�
                  }
  
                  addMessageToChat('ai', aiResponse);
+                 decideButton.disabled = false; // AI 메시지 표시 후 결정 버튼 활성화
                  // 모델 발화 히스토리에 추가
                  chatHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
                  aiDecision = aiNewDecision;
@@ -765,10 +829,63 @@ ${currentRound === MAX_ROUNDS ? '이번이 마지막 라운드이니 신중하�
             slider.addEventListener('input', updateSliderValue);
             decideButton.addEventListener('click', playRound);
             nextRoundButton.addEventListener('click', startNextRound);
-         selectLogicalButton.addEventListener('click', () => selectPersona('logical'));
-         selectEmotionalButton.addEventListener('click', () => selectPersona('emotional'));
-         selectCompetitiveButton.addEventListener('click', () => selectPersona('competitive'));
-         selectTitfortatButton.addEventListener('click', () => selectPersona('titfortat'));
+         personaButtons.forEach(button => {
+             button.addEventListener('click', () => {
+                 // 모든 버튼의 'selected' 클래스 제거
+                 personaButtons.forEach(btn => btn.classList.remove('selected'));
+                 // 클릭된 버튼에만 'selected' 클래스 추가
+                 button.classList.add('selected');
+                 // 선택된 페르소나 저장
+                 selectedPersonaType = button.dataset.persona;
+                 // 닉네임, 라운드 설정 UI 표시
+                 gameSetupOptions.style.display = 'block';
+             });
+         });
+
+         roundSlider.addEventListener('input', () => {
+             const val = parseInt(roundSlider.value);
+             MAX_ROUNDS = val === 0 ? 5 : 10;
+             roundValue.textContent = MAX_ROUNDS;
+         });
+
+         startGameButton.addEventListener('click', () => {
+             const nickname = playerNameInput.value.trim();
+
+             if (!selectedPersonaType) {
+                 alert('AI 파트너를 선택해주세요.');
+                 return;
+             }
+             if (nickname === '') {
+                 alert('닉네임을 입력해주세요.');
+                 return;
+             }
+
+             // 게임 시작 준비
+             playerName = nickname;
+             aiPersona = personas[selectedPersonaType];
+             
+             if (!GEMINI_API_KEY) {
+                 GEMINI_API_KEY = prompt("Google AI API 키를 입력해주세요.", "");
+                 if (!GEMINI_API_KEY) {
+                     alert("API 키가 필요합니다.");
+                     return;
+                 }
+             }
+
+             // 고유 ID 설정
+             let uniqueId = localStorage.getItem('playerUniqueId');
+             if (!uniqueId) {
+                 uniqueId = Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+                 localStorage.setItem('playerUniqueId', uniqueId);
+             }
+             playerId = uniqueId;
+
+             // 모달 닫고 게임 시작
+             tutorialModal.style.display = 'none';
+             resultModal.style.display = 'none';
+             initiateRound();
+         });
+
          sendChatButton.addEventListener('click', handleSendChat);
          chatInput.addEventListener('keypress', (e) => {
              if (e.key === 'Enter') handleSendChat();
